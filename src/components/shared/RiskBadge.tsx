@@ -24,7 +24,19 @@ const labels: Record<RiskTier, string> = {
 export function RiskBadge({ tier, compact }: { tier: RiskTier; compact?: boolean }) {
   const c = config[tier]
   const [rect, setRect] = useState<DOMRect | null>(null)
+  const [pinned, setPinned] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
+  const pinTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const pin = () => {
+    if (ref.current) setRect(ref.current.getBoundingClientRect())
+    setPinned(true)
+    if (pinTimer.current) clearTimeout(pinTimer.current)
+    pinTimer.current = setTimeout(() => {
+      setPinned(false)
+      setRect(null)
+    }, 2000)
+  }
 
   if (compact) {
     return (
@@ -32,7 +44,8 @@ export function RiskBadge({ tier, compact }: { tier: RiskTier; compact?: boolean
         ref={ref}
         style={{ display: 'inline-flex', cursor: 'default' }}
         onMouseEnter={() => ref.current && setRect(ref.current.getBoundingClientRect())}
-        onMouseLeave={() => setRect(null)}
+        onMouseLeave={() => { if (!pinned) setRect(null) }}
+        onClick={(e) => { e.stopPropagation(); pin() }}
       >
         {icons[tier]}
         {rect && createPortal(

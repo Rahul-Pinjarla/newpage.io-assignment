@@ -4,14 +4,27 @@ import { Info } from 'lucide-react'
 
 export function InfoTooltip({ text }: { text: string }) {
   const [rect, setRect] = useState<DOMRect | null>(null)
+  const [pinned, setPinned] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
+  const pinTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const pin = () => {
+    if (ref.current) setRect(ref.current.getBoundingClientRect())
+    setPinned(true)
+    if (pinTimer.current) clearTimeout(pinTimer.current)
+    pinTimer.current = setTimeout(() => {
+      setPinned(false)
+      setRect(null)
+    }, 2000)
+  }
 
   return (
     <span
       ref={ref}
       style={{ display: 'inline-flex', alignItems: 'center', flexShrink: 0, cursor: 'help' }}
       onMouseEnter={() => ref.current && setRect(ref.current.getBoundingClientRect())}
-      onMouseLeave={() => setRect(null)}
+      onMouseLeave={() => { if (!pinned) setRect(null) }}
+      onClick={(e) => { e.stopPropagation(); pin() }}
     >
       <Info size={11} style={{ color: '#CBD5E1' }} />
       {rect && createPortal(
@@ -38,12 +51,9 @@ export function InfoTooltip({ text }: { text: string }) {
         }}>
           {text}
           <div style={{
-            position: 'absolute',
-            left: '50%',
-            top: '100%',
+            position: 'absolute', left: '50%', top: '100%',
             transform: 'translateX(-50%)',
-            borderWidth: '5px',
-            borderStyle: 'solid',
+            borderWidth: '5px', borderStyle: 'solid',
             borderColor: '#1E293B transparent transparent transparent',
           }} />
         </div>,
