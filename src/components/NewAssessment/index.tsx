@@ -3,7 +3,7 @@ import { useData } from '../../data/DataProvider'
 import { evaluate } from '../../rules/riskEngine'
 import type { ClientRecord, Branch, ClientType, KycStatus, SourceOfFunds } from '../../types/onboarding'
 import { RiskBadge } from '../shared/RiskBadge'
-import { CheckCircle2, AlertTriangle, Clock, ChevronRight, ChevronLeft } from 'lucide-react'
+import { CheckCircle2, AlertTriangle, Clock, ChevronRight, ChevronLeft, Play } from 'lucide-react'
 
 const BRANCHES: Branch[] = ['Canary Wharf', 'Edinburgh', 'Mayfair', 'Manchester']
 const RMS = ['R. Patel', 'M. Ferrara', 'S. Beaumont', 'A. Kovacs', 'J. Morrison', 'T. Nakamura', 'L. Okonkwo', 'H. Lindqvist']
@@ -158,16 +158,19 @@ export function NewAssessment() {
   const [form, setForm] = useState(emptyForm)
   const [submitted, setSubmitted] = useState(false)
   const [submittedId, setSubmittedId] = useState('')
-  const startTimeRef = useRef<number>(Date.now())
+  const [started, setStarted] = useState(false)
+  const startTimeRef = useRef<number>(0)
   const [elapsed, setElapsed] = useState(0)
 
   useEffect(() => {
+    if (!started) return
     startTimeRef.current = Date.now()
+    setElapsed(0)
     const interval = setInterval(() => {
       setElapsed(Math.floor((Date.now() - startTimeRef.current) / 1000))
     }, 1000)
     return () => clearInterval(interval)
-  }, [])
+  }, [started])
 
   const preview = evaluate({
     ...form,
@@ -209,7 +212,7 @@ export function NewAssessment() {
     setStep(1)
     setSubmitted(false)
     setSubmittedId('')
-    startTimeRef.current = Date.now()
+    setStarted(false)
     setElapsed(0)
   }
 
@@ -245,7 +248,40 @@ export function NewAssessment() {
 
   return (
     <div style={{ maxWidth: '680px', margin: '0 auto' }}>
-      <div style={card}>
+      <div style={{ ...card, position: 'relative' }}>
+
+        {/* Start overlay — covers form until RM clicks Start */}
+        {!started && (
+          <div style={{
+            position: 'absolute', inset: 0, borderRadius: '8px', zIndex: 10,
+            background: 'rgba(17, 24, 39, 0.72)',
+            backdropFilter: 'blur(4px)',
+            WebkitBackdropFilter: 'blur(4px)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '14px',
+          }}>
+            <div style={{ width: '52px', height: '52px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Clock size={24} color="rgba(255,255,255,0.75)" />
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff', marginBottom: '6px' }}>New Client Assessment</div>
+              <div style={{ fontSize: '12.5px', color: 'rgba(255,255,255,0.5)', maxWidth: '240px', lineHeight: 1.5 }}>
+                The 90-second intake timer starts when you click below.
+              </div>
+            </div>
+            <button
+              onClick={() => setStarted(true)}
+              style={{
+                marginTop: '4px', display: 'flex', alignItems: 'center', gap: '8px',
+                padding: '11px 28px', background: '#fff', color: '#1B2A4A',
+                border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 700,
+                cursor: 'pointer', minHeight: '44px', letterSpacing: '0.01em',
+              }}
+            >
+              <Play size={15} style={{ fill: '#1B2A4A' }} /> Start Assessment
+            </button>
+          </div>
+        )}
+
         {/* Timer */}
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '4px' }}>
           <span style={{ fontSize: '12px', color: elapsed > 90 ? '#DC2626' : '#9CA3AF', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: elapsed > 90 ? 600 : 400 }}>
