@@ -242,8 +242,8 @@ export function Dashboard() {
     { label: 'Client', field: 'client_name', key: 'name' },
     { label: 'Branch', field: 'branch', key: 'branch' },
     { label: 'Date', field: 'onboarding_date', key: 'date' },
-    { label: 'Computed', field: 'computed_risk', key: 'comp', tooltip: "Sentinel's computed risk tier from screening data: PEP, sanctions, adverse media, jurisdiction, source of funds." },
-    { label: 'Stored', field: 'risk_classification', key: 'stored', tooltip: 'Risk classification recorded at onboarding. Mismatch with Computed requires compliance review.' },
+    { label: 'Calc', field: 'computed_risk', key: 'comp', tooltip: "Sentinel's real-time risk tier, calculated from screening data: PEP, sanctions, adverse media, jurisdiction, source of funds." },
+    { label: 'Rec', field: 'risk_classification', key: 'stored', tooltip: 'Risk classification recorded at onboarding by the RM. A mismatch with Calc indicates a compliance gap requiring review.' },
     { label: 'KYC', field: 'kyc_status', key: 'kyc', tooltip: 'KYC verification status. EDD is mandatory for HIGH-risk clients before approval.' },
     { label: '!', field: null, key: 'alert', tooltip: 'Classification mismatch — stored tier contradicts computed screening result.' },
   ]
