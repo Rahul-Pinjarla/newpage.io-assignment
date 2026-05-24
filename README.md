@@ -103,3 +103,20 @@ Jurisdiction matching is case-insensitive. The country field uses a datalist for
 ## Architecture discussion
 
 For production considerations — offline-first sync, configurable rules engine, FCA record-keeping compliance, and multi-branch scale — see [ARCHITECTURE.md](./ARCHITECTURE.md).
+
+## Screenshots:
+<img width="1021" height="771" alt="Screenshot 2026-05-25 at 04 21 49" src="https://github.com/user-attachments/assets/50758a9a-5ee5-4e81-a195-20b9d2763c91" />
+
+<img width="1025" height="770" alt="Screenshot 2026-05-25 at 04 23 34" src="https://github.com/user-attachments/assets/a382f601-ece4-4ed4-86f0-bcacdaeca5b8" />
+
+<img width="1024" height="771" alt="Screenshot 2026-05-25 at 04 24 26" src="https://github.com/user-attachments/assets/6adcea34-9a9b-4ec9-bb9c-c3451f1473c7" />
+
+<img width="1021" height="768" alt="Screenshot 2026-05-25 at 04 26 02" src="https://github.com/user-attachments/assets/fea74561-a92c-417d-9589-1cfb6a96e494" />
+
+<img width="1029" height="773" alt="Screenshot 2026-05-25 at 04 26 09" src="https://github.com/user-attachments/assets/dd6d5ca2-a1f2-47f3-895a-cac14851f808" />
+
+
+
+
+
+
